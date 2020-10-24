@@ -1,0 +1,52 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r}
+#Read the dataset; note: please change to your own directory
+fsd_data <- read.csv("/Users/Rahmatia/Documents/R/Bayes/naive.csv")
+fsd_data
+```
+
+```{r}
+#Studying the structure of the data
+str(fsd_data)
+#head(fsd_data)
+```
+
+```{r}
+#Fitting the Naive Bayes model
+Naive_Bayes_Model=naiveBayes(y_status ~., data=fsd_data)
+#What does the model say? Print the model summary
+Naive_Bayes_Model
+```
+
+```{r}
+#Input new data
+newData <- data.frame(x1_cuaca = "hujan", x2_suhu = "sedang", x3_kelembaban = "tinggi", x4_berangin = "tidak", y_status="")
+newData
+```
+
+```{r}
+#Predict the new data
+vector_prediction = predict(Naive_Bayes_Model, newData, type = "raw")
+vp = vector_prediction
+vp
+#Note: the probability values for prediction in here are not similar as what we get when we calculate it manually using Naive Bayes classifier formula. Most likely that in the "predict" function, it is using transformation, employed trick log and log-sum-exp to avoid underflow; to avoid the probability values that are too small.
+```
+
+```{r}
+#Predict the new data (cont'd)
+yhat_status = colnames(vp)[max.col(vp,ties.method="first")]
+sprintf("y_hat for the new data is '%s'",yhat_status)
+newData$y_status <- yhat_status
+newData
+```
+
+```{r}
+#Exercise
+#Find the class if given an input: cuaca hujan, suhu panas, kelembaban normal, and berangin.
+```
